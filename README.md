@@ -120,4 +120,8 @@ In the compilation process, the **header file** is used in the pre-processing ph
 - header file `library_api.hpp`
 - compiled library object `library_api.a`
 
-Usually a `.a` file would include multiple `.o` files.
+Usually a `.a` file would include multiple `.o` files. The steps to compile `main.cpp` is as follows:
+
+- compile the modules: `clang++ -std=c++17 -c tools.cpp -o tools.o`
+- organize the modules into a library: `ar rcs libtools.a tools.o <other-modules>`
+- link libraries when building the project: `clang++ -std=c++17 main.cpp -L . -ltools -o main`, where `-L <dir>` adds the directory to the library search path, and `-l<library-name>` is specifying the name of the library file. If `lib<name>.a` is the library object, then we use `-l<name>` for linking.
