@@ -7,11 +7,11 @@ include_directories(include/)
 
 # set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# create library "libtools"
+# create library "libtools.a"
 add_library(tools src/tools.cpp) 
 
-# creates libtools.a # add executable main
-add_executable(main src/main.cpp)
+# add executable main
+add_executable(main src/main.cpp)  # main.o
 
 # tell the linker to bind these objects together 
 target_link_libraries(main tools)

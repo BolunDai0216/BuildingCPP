@@ -131,6 +131,8 @@ Usually a `.a` file would include multiple `.o` files. The steps to compile `mai
 Make and Ninja are build systems, CMake is a metabuild system. CMake generates makefiles that are given to build systems to actually build the project. So the usual workflow is
 
 ```console
+mkdir build
+cd build
 cmake ../
 make
 ```
