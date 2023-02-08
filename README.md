@@ -125,3 +125,30 @@ Usually a `.a` file would include multiple `.o` files. The steps to compile `mai
 - compile the modules: `clang++ -std=c++17 -c tools.cpp -o tools.o`
 - organize the modules into a library: `ar rcs libtools.a tools.o <other-modules>`
 - link libraries when building the project: `clang++ -std=c++17 main.cpp -L . -ltools -o main`, where `-L <dir>` adds the directory to the library search path, and `-l<library-name>` is specifying the name of the library file. If `lib<name>.a` is the library object, then we use `-l<name>` for linking.
+
+## Build & Metabuild Systems
+
+Make and Ninja are build systems, CMake is a metabuild system. CMake generates makefiles that are given to build systems to actually build the project. So the usual workflow is
+
+```console
+cmake ../
+make
+```
+
+To see what CMake does, we can write the CMake equivalence of 
+
+```console
+clang++ -std=c++17 -c tools.cpp -o tools.o
+ar rcs libtools.a tools.o
+clang++ -std=c++17 main.cpp -L . -ltools -o main
+```
+
+which is
+
+```t
+add_library(tools tools.cpp)
+add_executable(main main.cpp)
+target_link_library(main tools)
+```
+
+We can find a one-to-one correspondence between them. The `add_library(tools tools.cpp)` command corresponds to `clang++ -std=c++17 -c tools.cpp -o tools.o` and `ar rcs libtools.a tools.o`. The `add_executable(main main.cpp)` part corresponds to `clang++ -std=c++17 main.cpp -o main`. The `target_link_library(main tools)` part corresponds to `-L . -ltools`.
