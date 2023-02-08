@@ -37,8 +37,8 @@ When you compile the hello world example, four steps occurred
 
 - Pre-process: `clang++ -E main.cpp > main.i`
 - Compile: `clang++ -S main.i`
-- Assembly
-- Link
+- Assembly: `clang++ -c main.s`
+- Link: `clang++ main.o -o main`
 
 The example files are shown in the `compile_process` folder.
 
@@ -76,9 +76,9 @@ clang++ -E main.cpp > main.i
 clang++ -E _main.cpp > _main.i
 ```
 
-We can see that `_main.i` only includes a few lines. On the other hand, `main.i` includes the lines in `_main.i` and in addition has all of the line included in `<iostream>`. 
+We can see that `_main.i` only includes a few lines. On the other hand, `main.i` includes the lines in `_main.i` and in addition has all of the lines included from `<iostream>`. 
 
-Another example if is `bracket.cpp`. We first create a header file `bracket.h` that only includes a curly bracket. Then we replace the last curly bracket with the pre-processing operation `#include "bracket.h"`. If we then run
+Another example is `bracket.cpp`. We first create a header file `bracket.h` that only includes a curly bracket. Then we replace the last curly bracket with the pre-processing operation `#include "bracket.h"`. If we then run
 
 ```console
 clang++ -E bracket.cpp > bracket.i
@@ -95,3 +95,11 @@ If we take a look at `bracket.i`, we can see all of the `integers` has been repl
 ### Compiler
 
 The job of the compiler is to transform the pre-processed C++ code into assembly code, which is easier to understand for the machine. Take a look at `main.s` for the assembly version of `main.cpp`.
+
+### Assembler
+
+The job of the assembler then transforms the assembly code into binaries (`.o` object file).
+
+### Linker
+
+The linker then links the object file and the libraries to generate the final executable.
