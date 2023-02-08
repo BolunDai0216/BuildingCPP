@@ -98,8 +98,26 @@ The job of the compiler is to transform the pre-processed C++ code into assembly
 
 ### Assembler
 
-The job of the assembler then transforms the assembly code into binaries (`.o` object file).
+The job of the assembler is to transform the assembly code into binaries (`.o` object file).
 
 ### Linker
 
 The linker then links the object file and the libraries to generate the final executable.
+
+## Libraries
+
+![library compile process visualization](images/libraries_compile.png)
+
+A library is a collection of multiple object files that are logically connected. There are two types of libraries: static and dynamics.
+
+- Static libraries (`lib*.a` files) are faster, but they take a lot of memory and becomes part of the final executable.
+- Dynamic libraries (`lib*.so` files) are slower, but they can be copied and referenced by a program.
+
+Usually, we would separte the declarations and implementations of a library. The declarations will usually be stored within a header file (`.hpp` file), while the implementations will be within a `.cpp` file. 
+
+In the compilation process, the **header file** is used in the pre-processing phase. All of the declarations will be copied into the a single `.i` file, and an object file will be generated. Then, the linker will map the declarations to a compiled library object that contains their implementations. Thus, to use a library, we would need two things:
+
+- header file `library_api.hpp`
+- compiled library object `library_api.a`
+
+Usually a `.a` file would include multiple `.o` files.
