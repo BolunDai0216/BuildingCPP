@@ -35,7 +35,57 @@ Now that we see how we can compile files, let's try to understand what is going 
 
 When you compile the hello world example, four steps occurred
 
-- Pre-process
-- Compile
+- Pre-process: `clang++ -E main.cpp > main.i`
+- Compile: `clang++ -S main.i`
 - Assembly
 - Link
+
+### Pre-processor
+
+The task of the pre-processor is to replace any line starting with `#` with the corresponding content. The most common one is the `#include` operation, which includes the corresponding header file within the `.i` file. We can see an example of this by creating two files
+
+```cpp
+// main.cpp
+#include <iostream>
+
+int main()
+{
+  std::cout << "Hello World" << std::endl;
+  return 0;
+}
+```
+
+and 
+
+```cpp
+// _main.cpp
+
+int main()
+{
+  std::cout << "Hello World" << std::endl;
+  return 0;
+}
+```
+
+After we run
+
+```console
+clang++ -E main.cpp > main.i
+clang++ -E _main.cpp > _main.i
+```
+
+We can see that `_main.i` only includes a few lines. On the other hand, `main.i` includes the lines in `_main.i` and in addition has all of the line included in `<iostream>`. 
+
+Another example if is `bracket.cpp`. We first create a header file `bracket.h` that only includes a curly bracket. Then we replace the last curly bracket with the pre-processing operation `#include "bracket.h"`. If we then run
+
+```console
+clang++ -E bracket.cpp > bracket.i
+```
+
+we can see the curly bracket is restored within `bracket.i`. We also used the operation
+
+```cpp
+#define integer int
+```
+
+If we take a look at `bracket.i`, we can see all of the `integers` has been replaced with `int`. This shows that the job of the pre-processor is to only replace the `#` operations. Apart from `#include` and `#define`, we also have a few more pre-processing operations see [here](https://www.tutorialspoint.com/cplusplus/cpp_preprocessor.htm) for a description.
