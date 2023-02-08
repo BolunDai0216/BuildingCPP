@@ -40,6 +40,8 @@ When you compile the hello world example, four steps occurred
 - Assembly
 - Link
 
+The example files are shown in the `compile_process` folder.
+
 ### Pre-processor
 
 The task of the pre-processor is to replace any line starting with `#` with the corresponding content. The most common one is the `#include` operation, which includes the corresponding header file within the `.i` file. We can see an example of this by creating two files
@@ -89,3 +91,7 @@ we can see the curly bracket is restored within `bracket.i`. We also used the op
 ```
 
 If we take a look at `bracket.i`, we can see all of the `integers` has been replaced with `int`. This shows that the job of the pre-processor is to only replace the `#` operations. Apart from `#include` and `#define`, we also have a few more pre-processing operations see [here](https://www.tutorialspoint.com/cplusplus/cpp_preprocessor.htm) for a description.
+
+### Compiler
+
+The job of the compiler is to transform the pre-processed C++ code into assembly code, which is easier to understand for the machine. Take a look at `main.s` for the assembly version of `main.cpp`.
