@@ -27,4 +27,4 @@ g++ hello_world.cpp -o a.out
 
 Here `clang++` and `g++` are two different compilers, `hello_world.cpp` specifies the name of the `.cpp` file that we want to compile, `-o` tag means we want to specify the name of the output executable, and `a.out` is the name of the executable that we chose. Run the command with the `hello_world.cpp` example in the `compiling_101` file and see if it works.
 
-Now that we see how we can compile files, lets try to understand what is going on behind the scene.
+Now that we see how we can compile files, let's try to understand what is going on behind the scene.
