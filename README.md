@@ -154,3 +154,5 @@ target_link_library(main tools)
 ```
 
 We can find a one-to-one correspondence between them. The `add_library(tools tools.cpp)` command corresponds to `clang++ -std=c++17 -c tools.cpp -o tools.o` and `ar rcs libtools.a tools.o`. The `add_executable(main main.cpp)` part corresponds to `clang++ -std=c++17 main.cpp -o main`. The `target_link_library(main tools)` part corresponds to `-L . -ltools`.
+
+If you want to find an external library, you can use the `find_package` command. Note that the `find_package` command is looking for `Find<package>.cmake` files.
