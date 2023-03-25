@@ -189,3 +189,24 @@ and the files will then be installed within
 /Users/BolunDai0216/Documents/BuildingCPP/cmake_install/install/lib
 ```
 
+## The Basic Way to Use Installed Packages
+
+To use installed libraries the easiest way is to figure out where the header files and library files are located and just use them directly. The source code of this section can be found in the `cmake_use_installed_package_basic` folder.
+
+First, to make our life easier we create a variable to store the location of the installation
+
+```cmake
+set(CUSTOM_INSTALLATION_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cmake_install/install)
+```
+
+We will be using the installed files from the last section, so the `CUSTOM_INSTALLATION_DIR` will be the `install` folder from last section. Then, like before we can include the header files as
+
+```cmake
+include_directories(${CUSTOM_INSTALLATION_DIR}/include/) 
+```
+
+Since we already have the library files (`.a` files), we would not need to run `add_library`, we can directly link the `.a` file using 
+
+```
+target_link_libraries(main ${CUSTOM_INSTALLATION_DIR}/lib/libtools.a)
+```
