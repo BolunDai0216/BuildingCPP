@@ -243,11 +243,10 @@ and if we compare the result of `LIBTOOLS_INCLUDE_DIR` and `${CUSTOM_INSTALLATIO
 
 ```cmake
 add_library(tools STATIC IMPORTED)
-set_target_properties(
-    tools
-    PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES ${LIBTOOLS_INCLUDE_DIR}$
-    IMPORTED_LOCATION ${LIBTOOLS_LIBRARY}
+set_target_properties(tools
+                      PROPERTIES
+                      INTERFACE_INCLUDE_DIRECTORIES ${LIBTOOLS_INCLUDE_DIR}
+                      IMPORTED_LOCATION ${LIBTOOLS_LIBRARY}
 )
 ```
 
