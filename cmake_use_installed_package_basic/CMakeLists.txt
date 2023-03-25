@@ -15,5 +15,22 @@ include_directories(${CUSTOM_INSTALLATION_DIR}/include/)
 # add executable main
 add_executable(main src/main.cpp)  # main.o
 
-# tell the linker to bind these objects together 
-target_link_libraries(main ${CUSTOM_INSTALLATION_DIR}/lib/libtools.a)
+find_library(LIBTOOLS_LIBRARY 
+             NAMES libtools.a
+             HINTS ${CUSTOM_INSTALLATION_DIR}
+             PATH_SUFFIXES lib/
+)                   
+
+message(LIBTOOLS_LIBRARY=${LIBTOOLS_LIBRARY})
+message(  SPECIFIED_PATH=${CUSTOM_INSTALLATION_DIR}/lib/libtools.a)
+
+# tell the linker to bind these objects together.
+# By toggling whether REALLY_BASIC is ON or OFF, we can make target_link_libraries
+# use the absolute path or the path from LIBTOOLS_LIBRARY.
+option(REALLY_BASIC OFF)
+
+if (REALLY_BASIC)
+    target_link_libraries(main ${CUSTOM_INSTALLATION_DIR}/lib/libtools.a)
+else()
+    target_link_libraries(main ${LIBTOOLS_LIBRARY})
+endif()

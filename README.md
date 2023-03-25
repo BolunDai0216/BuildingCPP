@@ -212,3 +212,19 @@ Since we already have the library files (`.a` files), we would not need to run `
 ```
 target_link_libraries(main ${CUSTOM_INSTALLATION_DIR}/lib/libtools.a)
 ```
+
+A bit more advanced and general way to do this is using `find_library`. In this example, we can use `find_library` as
+
+```cmake
+find_library(LIBTOOLS_LIBRARY 
+             NAMES libtools.a
+             HINTS ${CUSTOM_INSTALLATION_DIR}
+             PATH_SUFFIXES lib/
+) 
+```
+
+a nice intro to `find_library` can be found [here](https://dominikberner.ch/cmake-find-library/). Then if we compare the variable `LIBTOOLS_LIBRARY` and what we had before `${CUSTOM_INSTALLATION_DIR}/lib/libtools.a`, we can see that they are the same. Then, we can simply change the `target_link_libraries` to
+
+```cmake
+target_link_libraries(main ${LIBTOOLS_LIBRARY})
+```
