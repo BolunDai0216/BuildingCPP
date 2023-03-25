@@ -52,7 +52,7 @@ else()
     set_target_properties(
         tools
         PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "${LIBTOOLS_INCLUDE_DIR}"
+        INTERFACE_INCLUDE_DIRECTORIES ${LIBTOOLS_INCLUDE_DIR}
         IMPORTED_LOCATION ${LIBTOOLS_LIBRARY}
     )
     target_link_libraries(main tools)
