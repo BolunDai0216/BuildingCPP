@@ -239,4 +239,20 @@ find_path(LIBTOOLS_INCLUDE_DIR
 )
 ```
 
-and if we compare the result of `LIBTOOLS_INCLUDE_DIR` and `${CUSTOM_INSTALLATION_DIR}/include/` we can see that they are pointing to the same directory.
+and if we compare the result of `LIBTOOLS_INCLUDE_DIR` and `${CUSTOM_INSTALLATION_DIR}/include/` we can see that they are pointing to the same directory. Then to utilize `LIBTOOLS_INCLUDE_DIR` and `LIBTOOLS_LIBRARY`, we can first create an empty library target (I don't think empty is the official terminology), and then set the required properties. In this case, we only need to set the `INTERFACE_INCLUDE_DIRECTORIES` to `LIBTOOLS_INCLUDE_DIR` and `IMPORTED_LOCATION` to `LIBTOOLS_LIBRARY`. We do this using the following commands
+
+```
+add_library(tools STATIC IMPORTED)
+set_target_properties(
+    tools
+    PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${LIBTOOLS_INCLUDE_DIR}"
+    IMPORTED_LOCATION ${LIBTOOLS_LIBRARY}
+)
+```
+
+After this is done, we can then simply link the library using 
+
+```cmake
+target_link_libraries(main tools)
+```

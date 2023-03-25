@@ -48,5 +48,12 @@ message(  SPECIFIED_PATH=${CUSTOM_INSTALLATION_DIR}/lib/libtools.a)
 if (REALLY_BASIC)
     target_link_libraries(main ${CUSTOM_INSTALLATION_DIR}/lib/libtools.a)
 else()
-    target_link_libraries(main ${LIBTOOLS_LIBRARY})
+    add_library(tools STATIC IMPORTED)
+    set_target_properties(
+        tools
+        PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBTOOLS_INCLUDE_DIR}"
+        IMPORTED_LOCATION ${LIBTOOLS_LIBRARY}
+    )
+    target_link_libraries(main tools)
 endif()
