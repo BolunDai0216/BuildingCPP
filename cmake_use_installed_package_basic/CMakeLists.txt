@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD 17) # Use c++17.
 set(CUSTOM_INSTALLATION_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cmake_install/install)
 message(CUSTOM_INSTALLATION_DIR=${CUSTOM_INSTALLATION_DIR})
 
+# print commonly used CMake-defined variables
+message(CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR})
+message(CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR})
+
 # tell cmake where to look for *.hpp, *.h files
 include_directories(${CUSTOM_INSTALLATION_DIR}/include/) 
 

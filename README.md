@@ -199,6 +199,8 @@ First, to make our life easier we create a variable to store the location of the
 set(CUSTOM_INSTALLATION_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cmake_install/install)
 ```
 
+We are using a CMake-defined variable `CMAKE_CURRENT_SOURCE_DIR`, which gives us the directory where the `CMakeLists.txt` files is stored. Another commonly used CMake-defined variable is `CMAKE_CURRENT_BINARY_DIR` which gives us the directory within the build folder.
+
 We will be using the installed files from the last section, so the `CUSTOM_INSTALLATION_DIR` will be the `install` folder from last section. Then, like before we can include the header files as
 
 ```cmake
