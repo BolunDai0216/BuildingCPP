@@ -228,3 +228,15 @@ a nice intro to `find_library` can be found [here](https://dominikberner.ch/cmak
 ```cmake
 target_link_libraries(main ${LIBTOOLS_LIBRARY})
 ```
+
+Similarly, for the header files we can do the same thing. We can find the path to the include folder using the `find_path` command
+
+```cmake
+find_path(LIBTOOLS_INCLUDE_DIR
+        NAMES tools.hpp
+        HINTS ${CUSTOM_INSTALLATION_DIR}
+        PATH_SUFFIXES include/
+)
+```
+
+and if we compare the result of `LIBTOOLS_INCLUDE_DIR` and `${CUSTOM_INSTALLATION_DIR}/include/` we can see that they are pointing to the same directory.
