@@ -156,3 +156,36 @@ target_link_library(main tools)
 We can find a one-to-one correspondence between them. The `add_library(tools tools.cpp)` command corresponds to `clang++ -std=c++17 -c tools.cpp -o tools.o` and `ar rcs libtools.a tools.o`. The `add_executable(main main.cpp)` part corresponds to `clang++ -std=c++17 main.cpp -o main`. The `target_link_library(main tools)` part corresponds to `-L . -ltools`.
 
 If you want to find an external library, you can use the `find_package` command. Note that the `find_package` command is looking for `Find<package>.cmake` files.
+
+## Basic Installing Using CMake
+
+We now talk about how to install packages using CMake. All of the source code in this section is in the `cmake_install` folder. 
+
+Compared to the last section, in the C++ code all we changed is remove the reliance on `Eigen3` in `main.cpp`. What it means to install a package is to store the generated binary file, the header files, and the library files to some predefined location. To do this we add the following three lines in `CMakeLists.txt`
+
+```cmake
+install(TARGETS tools DESTINATION lib)
+install(FILES include/tools.hpp DESTINATION include)
+install(TARGETS main DESTINATION bin)
+```
+
+which is then installed using (only for CMake V3.15.0 and up, see [here](https://cmake.org/cmake/help/v3.24/guide/tutorial/Installing%20and%20Testing.html) for older versions)
+
+```console
+cmake --install .
+```
+
+We can see that the installation can be seperated into two types, installing targets and installing files. The targets are what is generated within the building process such as the library file `libtools.a` and the binary file `main`. The files are files that alread exists like the header file. The `DESTINATION` specifies where the installed files are stored at. The destinations are relative to a prefix directory, which can be specified when performing the installation using
+
+```console
+cmake --install . --prefix "/Users/BolunDai0216/Documents/BuildingCPP/cmake_install/install/"
+```
+
+and the files will then be installed within
+
+```
+/Users/BolunDai0216/Documents/BuildingCPP/cmake_install/install/bin/
+/Users/BolunDai0216/Documents/BuildingCPP/cmake_install/install/include/
+/Users/BolunDai0216/Documents/BuildingCPP/cmake_install/install/lib
+```
+
