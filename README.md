@@ -8,6 +8,8 @@ Tutorial on the C++ building process and how to build using CMake. I believe the
 - Build & Metabuild Systems
 - Basic Installing Using CMake
 - The Basic Way to Use Installed Packages
+- CMake Installation Using Config Files
+- Using `find_package()` to use external libraries
 
 ## Compiling 101
 
@@ -262,3 +264,11 @@ After this is done, we can then simply link the library using
 ```cmake
 target_link_libraries(main tools)
 ```
+
+## CMake Installation Using Config Files
+
+A more general approach to use external packages is using `<package-name>Config.cmake` files. This section, we will look into how to create such a config file. All of the source code of this section can be found in the `cmake_install_with_config` folder.
+
+## Using `find_package()` to use external libraries
+
+In the last section, we showed how to create config files. This section, we will look into how to use the config files to import external libraries in your own CMake project. All of the source code of this section can be found in the `cmake_use_config` folder.
