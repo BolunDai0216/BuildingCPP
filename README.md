@@ -269,6 +269,60 @@ target_link_libraries(main tools)
 
 A more general approach to use external packages is using `<package-name>Config.cmake` files. This section, we will look into how to create such a config file. All of the source code of this section can be found in the `cmake_install_with_config` folder.
 
+We first build the tools library using the commands
+
+```cmake
+include_directories(include/) 
+add_library(tools src/tools.cpp) 
+target_include_directories(tools INTERFACE 
+                          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> 
+                          $<INSTALL_INTERFACE:include>)
+```
+
+The `target_include_directories` commands uses generator expressions to say when using the built tools library the content within the `${CMAKE_CURRENT_SOURCE_DIR}` directory is included, while when using the installed tools library the content within the `/include` directory in the installation directory is included. Next, we generate the executables as before using the commands
+
+```cmake
+add_executable(main src/main.cpp)
+target_link_libraries(main tools)
+```
+
+The next step is to install the files.
+
+```
+install(TARGETS tools EXPORT toolsTargets DESTINATION lib)
+install(FILES include/tools.hpp DESTINATION include)
+```
+
+These lines installs the tools library within the `lib` folder within the installation directory and install the header files within the `include` folder within the installation directory. The installation directory is specified when installing it. When installing the tools library, it also exports a target called `toolsTargets`. Then, we use the following line
+
+```cmake
+install(EXPORT toolsTargets FILE toolsTargets.cmake DESTINATION lib/cmake/tools)
+```
+to install a `<lib-name>Targets.cmake` file that contains information about the `toolsTargets` target. Now, we are in a good position to install the `Config.cmake` file. First, we include `CMakePackageConfigHelpers`, which provides helper functions for generating the `Config.cmake` file. The `Config.cmake` file is generated using the command
+
+```cmake
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/toolsConfig.cmake"
+  INSTALL_DESTINATION "lib/cmake/tools"
+  NO_SET_AND_CHECK_MACRO
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+```
+
+The `INSTALL_DESTINATION` only needs to have the same number of subdirectories, i.e., if we want to install it in `install/lib/cmake/tools` we would need a three level destination as `a/b/c` here. By changing the `INSTALL_DESTINATION` to `a/b/c` and `a/b` you'll get what I mean. The `Config.cmake.in` file simply points to the `Target.cmake` file. A `ConfigVersion.cmake` file can be created using the command
+
+```cmake
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/toolsConfigVersion.cmake"
+  VERSION "${Tutorial_VERSION_MAJOR}.${Tutorial_VERSION_MINOR}"
+  COMPATIBILITY AnyNewerVersion)
+```
+Then we install both the `Config.cmake` and `ConfigVersion.cmake` files. Finally, we can build and install the package using the commands
+
+```console
+cmake .. && cmake --build .
+cmake --install . --prefix "~/Documents/BuildingCPP/cmake_install_with_config/install/"
+```
+
 ## Using `find_package()` to use external libraries
 
 In the last section, we showed how to create config files. This section, we will look into how to use the config files to import external libraries in your own CMake project. All of the source code of this section can be found in the `cmake_use_config` folder.

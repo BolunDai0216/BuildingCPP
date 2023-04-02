@@ -8,5 +8,4 @@ get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../" 
 
 ####################################################################################
 
-# set(TOOLS_INCLUDE_DIR "")
 include ( "${CMAKE_CURRENT_LIST_DIR}/toolsTargets.cmake" )
