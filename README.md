@@ -326,3 +326,15 @@ cmake --install . --prefix "~/Documents/BuildingCPP/cmake_install_with_config/in
 ## Using `find_package()` to use external libraries
 
 In the last section, we showed how to create config files. This section, we will look into how to use the config files to import external libraries in your own CMake project. All of the source code of this section can be found in the `cmake_use_config` folder.
+
+In the last section, we created a `Config.cmake` file. In this section, we will enable the `find_package` command to find it. Since we are installing it in a non-default location, we will need to pass on the directory to the `find_package` command
+
+```cmake
+find_package(tools CONFIG REQUIRED PATHS ~/Documents/BuildingCPP/cmake_install_with_config/install/lib/cmake/tools)
+```
+
+Then, we can directly using the `tools` library by linking it
+
+```cmake
+target_link_libraries(main tools)
+```
