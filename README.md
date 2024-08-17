@@ -1,4 +1,4 @@
-# BuildingCPP
+# Building C++
 
 [![License](https://img.shields.io/badge/License-MIT-cfd8dc?style=flat-square&labelColor=orange&color=lightgray)](https://github.com/BolunDai0216/pypi-bonjour/blob/main/LICENSE)
 [![Tutorial](https://img.shields.io/badge/Tutorial-orange?style=flat-square&logo=github)](https://bolundai0216.github.io/BuildingCPP/)
