@@ -19,4 +19,7 @@ Tutorial on the C++ building process and how to build using CMake. I believe the
 :caption: 'Content:'
 :hidden:
 :maxdepth: 2
+
+compiling_101
+cmake_101
 ```
