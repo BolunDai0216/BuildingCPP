@@ -1,0 +1,490 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Compiling 101" href="compiling_101.html" />
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
+        <title>CMake 101 - Building C++</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Building C++</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Building C++</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Content:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="compiling_101.html">Compiling 101</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">CMake 101</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/cmake_101.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="cmake-101">
+<h1>CMake 101<a class="headerlink" href="#cmake-101" title="Link to this heading">¶</a></h1>
+<section id="build-metabuild-systems">
+<h2>Build &amp; Metabuild Systems<a class="headerlink" href="#build-metabuild-systems" title="Link to this heading">¶</a></h2>
+<p>Make and Ninja are build systems, CMake is a metabuild system. CMake generates makefiles that are given to build systems to actually build the project. So the usual workflow is</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>build
+<span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>../
+make
+</pre></div>
+</div>
+<p>To see what CMake does, we can write the CMake equivalence of</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clang++<span class="w"> </span>-std<span class="o">=</span>c++17<span class="w"> </span>-c<span class="w"> </span>tools.cpp<span class="w"> </span>-o<span class="w"> </span>tools.o
+ar<span class="w"> </span>rcs<span class="w"> </span>libtools.a<span class="w"> </span>tools.o
+clang++<span class="w"> </span>-std<span class="o">=</span>c++17<span class="w"> </span>main.cpp<span class="w"> </span>-L<span class="w"> </span>.<span class="w"> </span>-ltools<span class="w"> </span>-o<span class="w"> </span>main
+</pre></div>
+</div>
+<p>which is</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">add_library</span><span class="p">(</span><span class="s">tools</span><span class="w"> </span><span class="s">tools.cpp</span><span class="p">)</span>
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">main</span><span class="w"> </span><span class="s">main.cpp</span><span class="p">)</span>
+<span class="nb">target_link_library</span><span class="p">(</span><span class="s">main</span><span class="w"> </span><span class="s">tools</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can find a one-to-one correspondence between them. The <code class="docutils literal notranslate"><span class="pre">add_library(tools</span> <span class="pre">tools.cpp)</span></code> command corresponds to <code class="docutils literal notranslate"><span class="pre">clang++</span> <span class="pre">-std=c++17</span> <span class="pre">-c</span> <span class="pre">tools.cpp</span> <span class="pre">-o</span> <span class="pre">tools.o</span></code> and <code class="docutils literal notranslate"><span class="pre">ar</span> <span class="pre">rcs</span> <span class="pre">libtools.a</span> <span class="pre">tools.o</span></code>. The <code class="docutils literal notranslate"><span class="pre">add_executable(main</span> <span class="pre">main.cpp)</span></code> part corresponds to <code class="docutils literal notranslate"><span class="pre">clang++</span> <span class="pre">-std=c++17</span> <span class="pre">main.cpp</span> <span class="pre">-o</span> <span class="pre">main</span></code>. The <code class="docutils literal notranslate"><span class="pre">target_link_library(main</span> <span class="pre">tools)</span></code> part corresponds to <code class="docutils literal notranslate"><span class="pre">-L</span> <span class="pre">.</span> <span class="pre">-ltools</span></code>.</p>
+<p>If you want to find an external library, you can use the <code class="docutils literal notranslate"><span class="pre">find_package</span></code> command. Note that the <code class="docutils literal notranslate"><span class="pre">find_package</span></code> command is looking for <code class="docutils literal notranslate"><span class="pre">Find&lt;package&gt;.cmake</span></code> files.</p>
+</section>
+<section id="basic-installing-using-cmake">
+<h2>Basic Installing Using CMake<a class="headerlink" href="#basic-installing-using-cmake" title="Link to this heading">¶</a></h2>
+<p>We now talk about how to install packages using CMake. All of the source code in this section is in the <code class="docutils literal notranslate"><span class="pre">cmake_install</span></code> folder.</p>
+<p>Compared to the last section, in the C++ code all we changed is remove the reliance on <code class="docutils literal notranslate"><span class="pre">Eigen3</span></code> in <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code>. What it means to install a package is to store the generated binary file, the header files, and the library files to some predefined location. To do this we add the following three lines in <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">install</span><span class="p">(</span><span class="s">TARGETS</span><span class="w"> </span><span class="s">tools</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">lib</span><span class="p">)</span>
+<span class="nb">install</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="s">include/tools.hpp</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">include</span><span class="p">)</span>
+<span class="nb">install</span><span class="p">(</span><span class="s">TARGETS</span><span class="w"> </span><span class="s">main</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">bin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which is then installed using (only for CMake V3.15.0 and up, see <a class="reference external" href="https://cmake.org/cmake/help/v3.24/guide/tutorial/Installing%20and%20Testing.html">here</a> for older versions)</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cmake --install .</span>
+</pre></div>
+</div>
+<p>We can see that the installation can be seperated into two types, installing targets and installing files. The targets are what is generated within the building process such as the library file <code class="docutils literal notranslate"><span class="pre">libtools.a</span></code> and the binary file <code class="docutils literal notranslate"><span class="pre">main</span></code>. The files are files that alread exists like the header file. The <code class="docutils literal notranslate"><span class="pre">DESTINATION</span></code> specifies where the installed files are stored at. The destinations are relative to a prefix directory, which can be specified when performing the installation using</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cmake --install . --prefix &quot;/Users/BolunDai0216/Documents/BuildingCPP/cmake_install/install/&quot;</span>
+</pre></div>
+</div>
+<p>and the files will then be installed within</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">BolunDai0216</span><span class="o">/</span><span class="n">Documents</span><span class="o">/</span><span class="n">BuildingCPP</span><span class="o">/</span><span class="n">cmake_install</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span>
+<span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">BolunDai0216</span><span class="o">/</span><span class="n">Documents</span><span class="o">/</span><span class="n">BuildingCPP</span><span class="o">/</span><span class="n">cmake_install</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">include</span><span class="o">/</span>
+<span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">BolunDai0216</span><span class="o">/</span><span class="n">Documents</span><span class="o">/</span><span class="n">BuildingCPP</span><span class="o">/</span><span class="n">cmake_install</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">lib</span>
+</pre></div>
+</div>
+</section>
+<section id="the-basic-way-to-use-installed-packages">
+<h2>The Basic Way to Use Installed Packages<a class="headerlink" href="#the-basic-way-to-use-installed-packages" title="Link to this heading">¶</a></h2>
+<p>To use installed libraries the easiest way is to figure out where the header files and library files are located and just use them directly. The source code of this section can be found in the <code class="docutils literal notranslate"><span class="pre">cmake_use_installed_package_basic</span></code> folder.</p>
+<p>First, to make our life easier we create a variable to store the location of the installation</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="p">(</span><span class="s">CUSTOM_INSTALLATION_DIR</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/../cmake_install/install</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We are using a CMake-defined variable <code class="docutils literal notranslate"><span class="pre">CMAKE_CURRENT_SOURCE_DIR</span></code>, which gives us the directory where the <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> files is stored. Another commonly used CMake-defined variable is <code class="docutils literal notranslate"><span class="pre">CMAKE_CURRENT_BINARY_DIR</span></code> which gives us the directory within the build folder.</p>
+<p>We will be using the installed files from the last section, so the <code class="docutils literal notranslate"><span class="pre">CUSTOM_INSTALLATION_DIR</span></code> will be the <code class="docutils literal notranslate"><span class="pre">install</span></code> folder from last section. Then, like before we can include the header files as</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">include_directories</span><span class="p">(</span><span class="o">${</span><span class="nv">CUSTOM_INSTALLATION_DIR</span><span class="o">}</span><span class="s">/include/</span><span class="p">)</span><span class="w"> </span>
+</pre></div>
+</div>
+<p>Since we already have the library files (<code class="docutils literal notranslate"><span class="pre">.a</span></code> files), we would not need to run <code class="docutils literal notranslate"><span class="pre">add_library</span></code>, we can directly link the <code class="docutils literal notranslate"><span class="pre">.a</span></code> file using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>target_link_libraries(main ${CUSTOM_INSTALLATION_DIR}/lib/libtools.a)
+</pre></div>
+</div>
+<p>A bit more advanced and general way to do this is using <code class="docutils literal notranslate"><span class="pre">find_library</span></code>. In this example, we can use <code class="docutils literal notranslate"><span class="pre">find_library</span></code> as</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_library</span><span class="p">(</span><span class="s">LIBTOOLS_LIBRARY</span><span class="w"> </span>
+<span class="w">             </span><span class="s">NAMES</span><span class="w"> </span><span class="s">libtools.a</span>
+<span class="w">             </span><span class="s">HINTS</span><span class="w"> </span><span class="o">${</span><span class="nv">CUSTOM_INSTALLATION_DIR</span><span class="o">}</span>
+<span class="w">             </span><span class="s">PATH_SUFFIXES</span><span class="w"> </span><span class="s">lib/</span>
+<span class="p">)</span><span class="w"> </span>
+</pre></div>
+</div>
+<p>a nice intro to <code class="docutils literal notranslate"><span class="pre">find_library</span></code> can be found <a class="reference external" href="https://dominikberner.ch/cmake-find-library/">here</a>. Then if we compare the variable <code class="docutils literal notranslate"><span class="pre">LIBTOOLS_LIBRARY</span></code> and what we had before <code class="docutils literal notranslate"><span class="pre">${CUSTOM_INSTALLATION_DIR}/lib/libtools.a</span></code>, we can see that they are the same. Then, we can simply change the <code class="docutils literal notranslate"><span class="pre">target_link_libraries</span></code> to</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">main</span><span class="w"> </span><span class="o">${</span><span class="nv">LIBTOOLS_LIBRARY</span><span class="o">}</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly, for the header files we can do the same thing. We can find the path to the include folder using the <code class="docutils literal notranslate"><span class="pre">find_path</span></code> command</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_path</span><span class="p">(</span><span class="s">LIBTOOLS_INCLUDE_DIR</span>
+<span class="w">        </span><span class="s">NAMES</span><span class="w"> </span><span class="s">tools.hpp</span>
+<span class="w">        </span><span class="s">HINTS</span><span class="w"> </span><span class="o">${</span><span class="nv">CUSTOM_INSTALLATION_DIR</span><span class="o">}</span>
+<span class="w">        </span><span class="s">PATH_SUFFIXES</span><span class="w"> </span><span class="s">include/</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>and if we compare the result of <code class="docutils literal notranslate"><span class="pre">LIBTOOLS_INCLUDE_DIR</span></code> and <code class="docutils literal notranslate"><span class="pre">${CUSTOM_INSTALLATION_DIR}/include/</span></code> we can see that they are pointing to the same directory. Then to utilize <code class="docutils literal notranslate"><span class="pre">LIBTOOLS_INCLUDE_DIR</span></code> and <code class="docutils literal notranslate"><span class="pre">LIBTOOLS_LIBRARY</span></code>, we can first create an empty library target (I don’t think empty is the official terminology), and then set the required properties. In this case, we only need to set the <code class="docutils literal notranslate"><span class="pre">INTERFACE_INCLUDE_DIRECTORIES</span></code> to <code class="docutils literal notranslate"><span class="pre">LIBTOOLS_INCLUDE_DIR</span></code> and <code class="docutils literal notranslate"><span class="pre">IMPORTED_LOCATION</span></code> to <code class="docutils literal notranslate"><span class="pre">LIBTOOLS_LIBRARY</span></code>. We do this using the following commands</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">add_library</span><span class="p">(</span><span class="s">tools</span><span class="w"> </span><span class="s">STATIC</span><span class="w"> </span><span class="s">IMPORTED</span><span class="p">)</span>
+<span class="nb">set_target_properties</span><span class="p">(</span><span class="s">tools</span>
+<span class="w">                      </span><span class="s">PROPERTIES</span>
+<span class="w">                      </span><span class="s">INTERFACE_INCLUDE_DIRECTORIES</span><span class="w"> </span><span class="o">${</span><span class="nv">LIBTOOLS_INCLUDE_DIR</span><span class="o">}</span>
+<span class="w">                      </span><span class="s">IMPORTED_LOCATION</span><span class="w"> </span><span class="o">${</span><span class="nv">LIBTOOLS_LIBRARY</span><span class="o">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>After this is done, we can then simply link the library using</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">main</span><span class="w"> </span><span class="s">tools</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="cmake-installation-using-config-files">
+<h2>CMake Installation Using Config Files<a class="headerlink" href="#cmake-installation-using-config-files" title="Link to this heading">¶</a></h2>
+<p>A more general approach to use external packages is using <code class="docutils literal notranslate"><span class="pre">&lt;package-name&gt;Config.cmake</span></code> files. This section, we will look into how to create such a config file. All of the source code of this section can be found in the <code class="docutils literal notranslate"><span class="pre">cmake_install_with_config</span></code> folder.</p>
+<p>We first build the tools library using the commands</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">include_directories</span><span class="p">(</span><span class="s">include/</span><span class="p">)</span><span class="w"> </span>
+<span class="nb">add_library</span><span class="p">(</span><span class="s">tools</span><span class="w"> </span><span class="s">src/tools.cpp</span><span class="p">)</span><span class="w"> </span>
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="s">tools</span><span class="w"> </span><span class="s">INTERFACE</span><span class="w"> </span>
+<span class="w">                          </span><span class="o">$&lt;</span><span class="nv">BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}</span><span class="o">&gt;</span><span class="w"> </span>
+<span class="w">                          </span><span class="o">$&lt;</span><span class="nv">INSTALL_INTERFACE:include</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">target_include_directories</span></code> commands uses generator expressions to say when using the built tools library the content within the <code class="docutils literal notranslate"><span class="pre">${CMAKE_CURRENT_SOURCE_DIR}</span></code> directory is included, while when using the installed tools library the content within the <code class="docutils literal notranslate"><span class="pre">/include</span></code> directory in the installation directory is included. Next, we generate the executables as before using the commands</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">add_executable</span><span class="p">(</span><span class="s">main</span><span class="w"> </span><span class="s">src/main.cpp</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">main</span><span class="w"> </span><span class="s">tools</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The next step is to install the files.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">install</span><span class="p">(</span><span class="n">TARGETS</span> <span class="n">tools</span> <span class="n">EXPORT</span> <span class="n">toolsTargets</span> <span class="n">DESTINATION</span> <span class="n">lib</span><span class="p">)</span>
+<span class="n">install</span><span class="p">(</span><span class="n">FILES</span> <span class="n">include</span><span class="o">/</span><span class="n">tools</span><span class="o">.</span><span class="n">hpp</span> <span class="n">DESTINATION</span> <span class="n">include</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These lines installs the tools library within the <code class="docutils literal notranslate"><span class="pre">lib</span></code> folder within the installation directory and install the header files within the <code class="docutils literal notranslate"><span class="pre">include</span></code> folder within the installation directory. The installation directory is specified when installing it. When installing the tools library, it also exports a target called <code class="docutils literal notranslate"><span class="pre">toolsTargets</span></code>. Then, we use the following line</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">install</span><span class="p">(</span><span class="s">EXPORT</span><span class="w"> </span><span class="s">toolsTargets</span><span class="w"> </span><span class="s">FILE</span><span class="w"> </span><span class="s">toolsTargets.cmake</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">lib/cmake/tools</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to install a <code class="docutils literal notranslate"><span class="pre">&lt;lib-name&gt;Targets.cmake</span></code> file that contains information about the <code class="docutils literal notranslate"><span class="pre">toolsTargets</span></code> target. Now, we are in a good position to install the <code class="docutils literal notranslate"><span class="pre">Config.cmake</span></code> file. First, we include <code class="docutils literal notranslate"><span class="pre">CMakePackageConfigHelpers</span></code>, which provides helper functions for generating the <code class="docutils literal notranslate"><span class="pre">Config.cmake</span></code> file. The <code class="docutils literal notranslate"><span class="pre">Config.cmake</span></code> file is generated using the command</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">configure_package_config_file</span><span class="p">(</span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/Config.cmake.in</span>
+<span class="w">  </span><span class="s2">&quot;${CMAKE_CURRENT_BINARY_DIR}/toolsConfig.cmake&quot;</span>
+<span class="w">  </span><span class="s">INSTALL_DESTINATION</span><span class="w"> </span><span class="s2">&quot;lib/cmake/tools&quot;</span>
+<span class="w">  </span><span class="s">NO_SET_AND_CHECK_MACRO</span>
+<span class="w">  </span><span class="s">NO_CHECK_REQUIRED_COMPONENTS_MACRO</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">INSTALL_DESTINATION</span></code> only needs to have the same number of subdirectories, i.e., if we want to install it in <code class="docutils literal notranslate"><span class="pre">install/lib/cmake/tools</span></code> we would need a three level destination as <code class="docutils literal notranslate"><span class="pre">a/b/c</span></code> here. By changing the <code class="docutils literal notranslate"><span class="pre">INSTALL_DESTINATION</span></code> to <code class="docutils literal notranslate"><span class="pre">a/b/c</span></code> and <code class="docutils literal notranslate"><span class="pre">a/b</span></code> you’ll get what I mean. The <code class="docutils literal notranslate"><span class="pre">Config.cmake.in</span></code> file simply points to the <code class="docutils literal notranslate"><span class="pre">Target.cmake</span></code> file. A <code class="docutils literal notranslate"><span class="pre">ConfigVersion.cmake</span></code> file can be created using the command</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">write_basic_package_version_file</span><span class="p">(</span>
+<span class="w">  </span><span class="s2">&quot;${CMAKE_CURRENT_BINARY_DIR}/toolsConfigVersion.cmake&quot;</span>
+<span class="w">  </span><span class="s">VERSION</span><span class="w"> </span><span class="s2">&quot;${Tutorial_VERSION_MAJOR}.${Tutorial_VERSION_MINOR}&quot;</span>
+<span class="w">  </span><span class="s">COMPATIBILITY</span><span class="w"> </span><span class="s">AnyNewerVersion</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we install both the <code class="docutils literal notranslate"><span class="pre">Config.cmake</span></code> and <code class="docutils literal notranslate"><span class="pre">ConfigVersion.cmake</span></code> files. Finally, we can build and install the package using the commands</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>..<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>.
+cmake<span class="w"> </span>--install<span class="w"> </span>.<span class="w"> </span>--prefix<span class="w"> </span><span class="s2">&quot;~/Documents/BuildingCPP/cmake_install_with_config/install/&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="using-find-package-to-use-external-libraries">
+<h2>Using <code class="docutils literal notranslate"><span class="pre">find_package()</span></code> to use external libraries<a class="headerlink" href="#using-find-package-to-use-external-libraries" title="Link to this heading">¶</a></h2>
+<p>In the last section, we showed how to create config files. This section, we will look into how to use the config files to import external libraries in your own CMake project. All of the source code of this section can be found in the <code class="docutils literal notranslate"><span class="pre">cmake_use_config</span></code> folder.</p>
+<p>In the last section, we created a <code class="docutils literal notranslate"><span class="pre">Config.cmake</span></code> file. In this section, we will enable the <code class="docutils literal notranslate"><span class="pre">find_package</span></code> command to find it. Since we are installing it in a non-default location, we will need to pass on the directory to the <code class="docutils literal notranslate"><span class="pre">find_package</span></code> command</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">tools</span><span class="w"> </span>
+<span class="w">             </span><span class="s">CONFIG</span><span class="w"> </span>
+<span class="w">             </span><span class="s">REQUIRED</span><span class="w"> </span>
+<span class="w">             </span><span class="s">PATHS</span><span class="w"> </span><span class="s">/path/to/cmake_install_with_config/install/lib/cmake/tools</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, we can directly using the <code class="docutils literal notranslate"><span class="pre">tools</span></code> library by linking it</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">main</span><span class="w"> </span><span class="s">tools</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="compiling_101.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Compiling 101</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Bolun Dai
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/BolunDai0216/BuildingCPP" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">CMake 101</a><ul>
+<li><a class="reference internal" href="#build-metabuild-systems">Build &amp; Metabuild Systems</a></li>
+<li><a class="reference internal" href="#basic-installing-using-cmake">Basic Installing Using CMake</a></li>
+<li><a class="reference internal" href="#the-basic-way-to-use-installed-packages">The Basic Way to Use Installed Packages</a></li>
+<li><a class="reference internal" href="#cmake-installation-using-config-files">CMake Installation Using Config Files</a></li>
+<li><a class="reference internal" href="#using-find-package-to-use-external-libraries">Using <code class="docutils literal notranslate"><span class="pre">find_package()</span></code> to use external libraries</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
